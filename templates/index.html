@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons for buttons and UI elements -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom StyleSheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dark-theme">
+    <div class="app-layout">
+        <!-- Main Calculator Container -->
+        <main class="calculator-card">
+            <!-- Header Bar with Title and Action Toggles -->
+            <header class="calculator-header">
+                <div class="header-title">
+                    <i class="fa-solid fa-calculator logo-icon"></i>
+                    <span>CALCULATOR</span>
+                </div>
+                <div class="header-actions">
+                    <!-- DEG/RAD Mode Toggle Button -->
+                    <button id="mode-toggle-btn" class="mode-btn active-deg" title="Toggle Degree/Radian mode">
+                        <span id="deg-indicator" class="mode-indicator active">DEG</span>
+                        <span class="mode-separator">/</span>
+                        <span id="rad-indicator" class="mode-indicator">RAD</span>
+                    </button>
+                    <!-- 2nd Function Toggle Button -->
+                    <button id="second-fn-btn" class="icon-toggle-btn" title="Toggle 2nd Functions (sin⁻¹, cos⁻¹, tan⁻¹, 10ˣ, eˣ)">
+                        <span>2nd</span>
+                    </button>
+                    <!-- Theme Toggle (Dark/Light) -->
+                    <button id="theme-toggle-btn" class="icon-toggle-btn" title="Toggle Light/Dark Theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <!-- History Panel Toggle Button -->
+                    <button id="history-toggle-btn" class="icon-toggle-btn" title="Toggle History Panel">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Calculator Display Screen -->
+            <section class="calculator-display">
+                <!-- Status Indicators inside display -->
+                <div class="display-status">
+                    <span id="status-mode" class="status-badge">DEG</span>
+                    <span id="status-2nd" class="status-badge badge-hidden">2nd</span>
+                </div>
+                <!-- Expression Line -->
+                <div id="expression-display" class="expression-line" title="Current Expression"></div>
+                <!-- Main Input/Result Line -->
+                <div id="result-display" class="result-line" title="Calculation Result">0</div>
+            </section>
+
+            <!-- Compact Calculator Keypad Grid (5 columns) -->
+            <section class="calculator-keypad">
+                <!-- Row 1: Scientific Functions (sin, cos, tan, log, ln) -->
+                <button class="btn btn-sci fn-primary" data-action="sin" data-second-action="asin">
+                    <span class="primary-label">sin</span>
+                    <span class="second-label">sin⁻¹</span>
+                </button>
+                <button class="btn btn-sci fn-primary" data-action="cos" data-second-action="acos">
+                    <span class="primary-label">cos</span>
+                    <span class="second-label">cos⁻¹</span>
+                </button>
+                <button class="btn btn-sci fn-primary" data-action="tan" data-second-action="atan">
+                    <span class="primary-label">tan</span>
+                    <span class="second-label">tan⁻¹</span>
+                </button>
+                <button class="btn btn-sci fn-primary" data-action="log" data-second-action="pow10">
+                    <span class="primary-label">log</span>
+                    <span class="second-label">10ˣ</span>
+                </button>
+                <button class="btn btn-sci fn-primary" data-action="ln" data-second-action="exp">
+                    <span class="primary-label">ln</span>
+                    <span class="second-label">eˣ</span>
+                </button>
+
+                <!-- Row 2: Powers, Roots & Constants (√, x², xʸ, π, e) -->
+                <button class="btn btn-sci" data-action="sqrt" data-second-action="cbrt">
+                    <span class="primary-label">√</span>
+                    <span class="second-label">∛</span>
+                </button>
+                <button class="btn btn-sci" data-action="square" data-second-action="cube">
+                    <span class="primary-label">x²</span>
+                    <span class="second-label">x³</span>
+                </button>
+                <button class="btn btn-sci" data-action="power">
+                    <span class="primary-label">xʸ</span>
+                </button>
+                <button class="btn btn-sci" data-action="pi">
+                    <span class="primary-label">π</span>
+                </button>
+                <button class="btn btn-sci" data-action="e">
+                    <span class="primary-label">e</span>
+                </button>
+
+                <!-- Row 3: Extended Functions (1/x, n!, (, ), %) -->
+                <button class="btn btn-sci" data-action="reciprocal">
+                    <span class="primary-label">1/x</span>
+                </button>
+                <button class="btn btn-sci" data-action="factorial">
+                    <span class="primary-label">n!</span>
+                </button>
+                <button class="btn btn-sci" data-action="paren-open">
+                    <span class="primary-label">(</span>
+                </button>
+                <button class="btn btn-sci" data-action="paren-close">
+                    <span class="primary-label">)</span>
+                </button>
+                <button class="btn btn-sci" data-action="percent">
+                    <span class="primary-label">%</span>
+                </button>
+
+                <!-- Row 4: Controls & Basic Operators (C, ⌫, ÷, ×, −) -->
+                <button class="btn btn-danger" data-action="clear" title="Clear All (Esc)">
+                    <span class="primary-label">C</span>
+                </button>
+                <button class="btn btn-warning" data-action="delete" title="Delete Last (Backspace)">
+                    <span class="primary-label">⌫</span>
+                </button>
+                <button class="btn btn-operator" data-action="operator" data-value="÷">
+                    <span class="primary-label">÷</span>
+                </button>
+                <button class="btn btn-operator" data-action="operator" data-value="×">
+                    <span class="primary-label">×</span>
+                </button>
+                <button class="btn btn-operator" data-action="operator" data-value="−">
+                    <span class="primary-label">−</span>
+                </button>
+
+                <!-- Row 5: Numbers 7, 8, 9, Plus (+) & Equals (=) -->
+                <button class="btn btn-num" data-action="number" data-value="7">7</button>
+                <button class="btn btn-num" data-action="number" data-value="8">8</button>
+                <button class="btn btn-num" data-action="number" data-value="9">9</button>
+                <button class="btn btn-operator" data-action="operator" data-value="+">
+                    <span class="primary-label">+</span>
+                </button>
+                <button class="btn btn-equals" data-action="equals" title="Calculate (= / Enter)">
+                    <span class="primary-label">=</span>
+                </button>
+
+                <!-- Row 6: Numbers 4, 5, 6, 0 -->
+                <button class="btn btn-num" data-action="number" data-value="4">4</button>
+                <button class="btn btn-num" data-action="number" data-value="5">5</button>
+                <button class="btn btn-num" data-action="number" data-value="6">6</button>
+                <button class="btn btn-num" data-action="number" data-value="0">0</button>
+
+                <!-- Row 7: Numbers 1, 2, 3, Decimal (.) -->
+                <button class="btn btn-num" data-action="number" data-value="1">1</button>
+                <button class="btn btn-num" data-action="number" data-value="2">2</button>
+                <button class="btn btn-num" data-action="number" data-value="3">3</button>
+                <button class="btn btn-num" data-action="decimal" data-value=".">.</button>
+            </section>
+        </main>
+
+        <!-- Calculation History Sidebar Panel -->
+        <aside id="history-panel" class="history-panel hidden">
+            <header class="history-header">
+                <div class="history-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>History</span>
+                </div>
+                <button id="close-history-btn" class="close-btn" title="Close History">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </header>
+
+            <div class="history-actions-bar">
+                <button id="clear-history-btn" class="clear-history-btn">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span>Clear History</span>
+                </button>
+            </div>
+
+            <ul id="history-list" class="history-list">
+                <li class="empty-history-msg">No calculations yet</li>
+            </ul>
+        </aside>
+    </div>
+
+    <!-- Application Script -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

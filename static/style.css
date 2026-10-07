@@ -1,0 +1,595 @@
+/* ==========================================================================
+   COMPACT SCIENTIFIC CALCULATOR STYLESHEET
+   Supports: Dark/Light Mode, Compact Grid Layout, Responsive UI
+   ========================================================================== */
+
+/* --- CSS Variables & Color Palettes --- */
+:root {
+    /* Fonts */
+    --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+    /* Transition Speeds */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+
+    /* Border Radius */
+    --radius-card: 20px;
+    --radius-display: 12px;
+    --radius-btn: 8px;
+    --radius-badge: 4px;
+}
+
+/* Dark Theme (Default) */
+body.dark-theme {
+    --bg-page: #0f172a;
+    --card-bg: #1e293b;
+    --card-border: rgba(255, 255, 255, 0.08);
+    --display-bg: #0b1329;
+    --display-border: rgba(255, 255, 255, 0.05);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    /* Button Colors */
+    --btn-num-bg: #334155;
+    --btn-num-hover: #475569;
+    --btn-num-text: #f8fafc;
+
+    --btn-sci-bg: #1e293b;
+    --btn-sci-border: #334155;
+    --btn-sci-hover: #334155;
+    --btn-sci-text: #38bdf8; /* Cyan accent */
+
+    --btn-op-bg: #2563eb;
+    --btn-op-hover: #1d4ed8;
+    --btn-op-text: #ffffff;
+
+    --btn-danger-bg: #dc2626;
+    --btn-danger-hover: #b91c1c;
+    --btn-danger-text: #ffffff;
+
+    --btn-warning-bg: #d97706;
+    --btn-warning-hover: #b45309;
+    --btn-warning-text: #ffffff;
+
+    --btn-equals-bg: #10b981;
+    --btn-equals-hover: #059669;
+    --btn-equals-text: #ffffff;
+
+    --history-bg: #1e293b;
+    --history-item-bg: #0f172a;
+    --history-item-hover: #334155;
+
+    --shadow-main: 0 16px 24px -4px rgba(0, 0, 0, 0.4);
+    --shadow-btn: 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Light Theme Override */
+body.light-theme {
+    --bg-page: #f1f5f9;
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.08);
+    --display-bg: #f8fafc;
+    --display-border: rgba(0, 0, 0, 0.06);
+
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+
+    /* Button Colors */
+    --btn-num-bg: #e2e8f0;
+    --btn-num-hover: #cbd5e1;
+    --btn-num-text: #0f172a;
+
+    --btn-sci-bg: #f8fafc;
+    --btn-sci-border: #cbd5e1;
+    --btn-sci-hover: #e2e8f0;
+    --btn-sci-text: #0284c7;
+
+    --btn-op-bg: #3b82f6;
+    --btn-op-hover: #2563eb;
+    --btn-op-text: #ffffff;
+
+    --btn-danger-bg: #ef4444;
+    --btn-danger-hover: #dc2626;
+    --btn-danger-text: #ffffff;
+
+    --btn-warning-bg: #f59e0b;
+    --btn-warning-hover: #d97706;
+    --btn-warning-text: #ffffff;
+
+    --btn-equals-bg: #10b981;
+    --btn-equals-hover: #059669;
+    --btn-equals-text: #ffffff;
+
+    --history-bg: #ffffff;
+    --history-item-bg: #f1f5f9;
+    --history-item-hover: #e2e8f0;
+
+    --shadow-main: 0 16px 24px -4px rgba(0, 0, 0, 0.1);
+    --shadow-btn: 0 1px 3px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Base & Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+/* --- Main Layout Grid --- */
+.app-layout {
+    position: relative;
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 720px;
+    justify-content: center;
+    align-items: stretch;
+}
+
+/* --- Calculator Card Container (COMPACT SIZING) --- */
+.calculator-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    padding: 16px;
+    width: 100%;
+    max-width: 380px; /* Reduced from 520px to 380px */
+    box-shadow: var(--shadow-main);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: background-color var(--transition-normal), border-color var(--transition-normal);
+}
+
+/* --- Header Section --- */
+.calculator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 2px;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.logo-icon {
+    color: var(--btn-sci-text);
+    font-size: 0.95rem;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Mode Button (DEG/RAD) */
+.mode-btn {
+    background-color: var(--display-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    transition: all var(--transition-fast);
+}
+
+.mode-btn:hover {
+    border-color: var(--btn-sci-text);
+}
+
+.mode-indicator {
+    padding: 1px 5px;
+    border-radius: 8px;
+    transition: all var(--transition-fast);
+}
+
+.mode-indicator.active {
+    background-color: var(--btn-sci-text);
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.mode-separator {
+    opacity: 0.4;
+}
+
+/* Icon Toggle Buttons */
+.icon-toggle-btn {
+    background-color: var(--display-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.75rem;
+    transition: all var(--transition-fast);
+}
+
+.icon-toggle-btn:hover {
+    background-color: var(--btn-sci-hover);
+    color: var(--btn-sci-text);
+    border-color: var(--btn-sci-text);
+}
+
+.icon-toggle-btn.active {
+    background-color: var(--btn-sci-text);
+    color: #0f172a;
+}
+
+/* --- Display Section (COMPACT MIN-HEIGHT) --- */
+.calculator-display {
+    background-color: var(--display-bg);
+    border: 1px solid var(--display-border);
+    border-radius: var(--radius-display);
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 80px; /* Reduced from 120px to 80px */
+    text-align: right;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.display-status {
+    display: flex;
+    gap: 4px;
+    font-size: 0.6rem;
+    font-weight: 700;
+}
+
+.status-badge {
+    background-color: rgba(56, 189, 248, 0.15);
+    color: var(--btn-sci-text);
+    padding: 1px 5px;
+    border-radius: var(--radius-badge);
+    letter-spacing: 0.05em;
+}
+
+.badge-hidden {
+    display: none;
+}
+
+.expression-line {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    min-height: 1.2em;
+    word-break: break-all;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+}
+
+.expression-line::-webkit-scrollbar {
+    display: none;
+}
+
+.result-line {
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    word-break: break-all;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    line-height: 1.2;
+}
+
+.result-line::-webkit-scrollbar {
+    display: none;
+}
+
+.result-line.error-text {
+    color: #f87171;
+    font-size: 1.25rem;
+}
+
+/* --- Calculator Keypad Grid --- */
+.calculator-keypad {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px; /* Reduced gap from 10px to 6px */
+}
+
+/* Common Button Styling */
+.btn {
+    border: 1px solid transparent;
+    border-radius: var(--radius-btn);
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 10px 4px; /* Compact padding */
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: var(--shadow-btn);
+    transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn .primary-label {
+    display: block;
+}
+
+.btn .second-label {
+    display: none;
+    font-size: 0.75rem;
+    color: #f59e0b;
+}
+
+body.mode-2nd-active .btn[data-second-action] .primary-label {
+    display: none;
+}
+
+body.mode-2nd-active .btn[data-second-action] .second-label {
+    display: block;
+}
+
+body.mode-2nd-active .btn[data-second-action] {
+    border-color: #f59e0b;
+}
+
+/* Button Types Styling */
+.btn-num {
+    background-color: var(--btn-num-bg);
+    color: var(--btn-num-text);
+    font-size: 1.1rem;
+}
+
+.btn-num:hover {
+    background-color: var(--btn-num-hover);
+}
+
+.btn-sci {
+    background-color: var(--btn-sci-bg);
+    border-color: var(--btn-sci-border);
+    color: var(--btn-sci-text);
+    font-size: 0.85rem;
+}
+
+.btn-sci:hover {
+    background-color: var(--btn-sci-hover);
+}
+
+.btn-operator {
+    background-color: var(--btn-op-bg);
+    color: var(--btn-op-text);
+    font-size: 1.15rem;
+}
+
+.btn-operator:hover {
+    background-color: var(--btn-op-hover);
+}
+
+.btn-danger {
+    background-color: var(--btn-danger-bg);
+    color: var(--btn-danger-text);
+    font-weight: 700;
+}
+
+.btn-danger:hover {
+    background-color: var(--btn-danger-hover);
+}
+
+.btn-warning {
+    background-color: var(--btn-warning-bg);
+    color: var(--btn-warning-text);
+}
+
+.btn-warning:hover {
+    background-color: var(--btn-warning-hover);
+}
+
+/* Equals Key (= Spans 3 rows vertically) */
+.btn-equals {
+    background-color: var(--btn-equals-bg);
+    color: var(--btn-equals-text);
+    font-size: 1.35rem;
+    font-weight: 700;
+    grid-row: span 3;
+    height: 100%;
+}
+
+.btn-equals:hover {
+    background-color: var(--btn-equals-hover);
+}
+
+/* --- History Sidebar Panel --- */
+.history-panel {
+    background-color: var(--history-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    width: 280px;
+    padding: 16px;
+    box-shadow: var(--shadow-main);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all var(--transition-normal);
+}
+
+.history-panel.hidden {
+    display: none;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.history-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 4px;
+}
+
+.clear-history-btn {
+    background: none;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-btn);
+    color: #f87171;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all var(--transition-fast);
+}
+
+.clear-history-btn:hover {
+    background-color: rgba(248, 113, 113, 0.1);
+    border-color: #f87171;
+}
+
+.history-list {
+    list-style: none;
+    overflow-y: auto;
+    max-height: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.history-item {
+    background-color: var(--history-item-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-btn);
+    padding: 8px 10px;
+    cursor: pointer;
+    text-align: right;
+    transition: all var(--transition-fast);
+}
+
+.history-item:hover {
+    background-color: var(--history-item-hover);
+    border-color: var(--btn-sci-text);
+}
+
+.history-expr {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.history-res {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--btn-sci-text);
+    margin-top: 2px;
+}
+
+.empty-history-msg {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 16px 0;
+}
+
+/* --- Mobile Responsive Layout --- */
+@media (max-width: 680px) {
+    .app-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .history-panel {
+        width: 100%;
+        max-width: 380px;
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 400px) {
+    body {
+        padding: 4px;
+    }
+
+    .calculator-card {
+        padding: 12px;
+        max-width: 100%;
+    }
+
+    .calculator-keypad {
+        gap: 4px;
+    }
+
+    .btn {
+        padding: 8px 2px;
+        font-size: 0.8rem;
+    }
+
+    .btn-num {
+        font-size: 1rem;
+    }
+
+    .result-line {
+        font-size: 1.5rem;
+    }
+}
